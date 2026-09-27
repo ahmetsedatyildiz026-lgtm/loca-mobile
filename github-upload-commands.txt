@@ -1,0 +1,28 @@
+# LOCA Projesini GitHub'a Yükleme Komutları
+# Terminal'de sırasıyla çalıştırın:
+
+# 1. Proje klasörüne gidin
+cd /Users/sedat/RESTORAN
+
+# 2. Git repository başlatın
+git init
+
+# 3. Tüm dosyaları stage'e ekleyin
+git add .
+
+# 4. İlk commit'i yapın
+git commit -m "feat: LOCA İstanbul mekan keşif uygulaması - production ready"
+
+# 5. Ana branch'i main olarak ayarlayın
+git branch -M main
+
+# 6. GitHub repository'nizi remote olarak ekleyin
+# ÖNEMLİ: Aşağıdaki komutu kendi GitHub kullanıcı adınızla değiştirin
+git remote add origin https://github.com/ahmetsedatyildiz026/loca-mobile.git
+
+# 7. Kodu GitHub'a push edin
+git push -u origin main
+
+# Eğer kimlik doğrulama isterse:
+# - GitHub kullanıcı adı: ahmetsedatyildiz026 (veya GitHub username'iniz)
+# - Şifre: GitHub Personal Access Token (şifre değil!)

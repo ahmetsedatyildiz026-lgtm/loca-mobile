@@ -1,0 +1,301 @@
+// LOCA Demo için Expo Snack'te çalıştırılabilir basitleştirilmiş versiyon
+
+// 1. snack.expo.dev adresine gidin
+// 2. New Snack oluşturun
+// 3. App.js dosyasının içeriğini aşağıdaki kod ile değiştirin:
+
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
+
+const THEME_COLORS = {
+  background: '#F8F9FA',
+  surface: '#FFFFFF',
+  primary: '#D4A373',
+  textPrimary: '#1A1D20',
+  textSecondary: '#6C757D',
+};
+
+const MOCK_PLACES = [
+  {
+    id: '1',
+    name: 'House Café Nişantaşı',
+    district: 'Beşiktaş',
+    neighborhood: 'Nişantaşı',
+    rating: 4.3,
+    priceLevel: '$$$',
+    isDate: true,
+    isFamily: true,
+    hasAlcohol: true,
+    isOpen: true,
+  },
+  {
+    id: '2',
+    name: 'Karga Bar',
+    district: 'Kadıköy',
+    neighborhood: 'Moda',
+    rating: 4.5,
+    priceLevel: '$$',
+    isDate: true,
+    hasAlcohol: true,
+    isOpen: false,
+  },
+  {
+    id: '3',
+    name: 'Karaköy Lokantası',
+    district: 'Beyoğlu',
+    neighborhood: 'Karaköy',
+    rating: 4.6,
+    priceLevel: '$$$$',
+    isDate: true,
+    isFamily: true,
+    hasAlcohol: true,
+    isOpen: true,
+  },
+];
+
+const PlaceCard = ({ place }) => (
+  <TouchableOpacity style={styles.card}>
+    <View style={styles.cardHeader}>
+      <Text style={styles.placeName}>{place.name}</Text>
+      <View style={styles.ratingContainer}>
+        <Text style={styles.rating}>⭐ {place.rating}</Text>
+      </View>
+    </View>
+    
+    <Text style={styles.location}>
+      📍 {place.district}, {place.neighborhood}
+    </Text>
+    
+    <View style={styles.tagsContainer}>
+      {place.isDate && <Text style={styles.tag}>💕 Romantik</Text>}
+      {place.isFamily && <Text style={styles.tag}>👨‍👩‍👧‍👦 Aile</Text>}
+      {place.hasAlcohol && <Text style={styles.tag}>🍷 İçkili</Text>}
+    </View>
+    
+    <View style={styles.cardFooter}>
+      <Text style={styles.price}>{place.priceLevel}</Text>
+      <View style={[
+        styles.statusBadge,
+        { backgroundColor: place.isOpen ? '#4CAF50' : '#F44336' }
+      ]}>
+        <Text style={styles.statusText}>
+          {place.isOpen ? 'Açık' : 'Kapalı'}
+        </Text>
+      </View>
+    </View>
+  </TouchableOpacity>
+);
+
+export default function App() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+
+  const districts = ['Tümü', 'Beşiktaş', 'Kadıköy', 'Beyoğlu', 'Fatih'];
+  
+  const filteredPlaces = MOCK_PLACES.filter(place => {
+    const matchesSearch = place.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesDistrict = !selectedDistrict || selectedDistrict === 'Tümü' || place.district === selectedDistrict;
+    return matchesSearch && matchesDistrict;
+  });
+
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor={THEME_COLORS.primary} barStyle="light-content" />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>LOCA</Text>
+        <Text style={styles.headerSubtitle}>İstanbul'u Keşfet</Text>
+      </View>
+
+      {/* District Filter */}
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        style={styles.districtScroll}
+        contentContainerStyle={styles.districtContainer}
+      >
+        {districts.map(district => (
+          <TouchableOpacity
+            key={district}
+            style={[
+              styles.districtButton,
+              selectedDistrict === district && styles.districtButtonActive
+            ]}
+            onPress={() => setSelectedDistrict(district)}
+          >
+            <Text style={[
+              styles.districtButtonText,
+              selectedDistrict === district && styles.districtButtonTextActive
+            ]}>
+              {district}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Places List */}
+      <ScrollView style={styles.content}>
+        <Text style={styles.sectionTitle}>
+          {selectedDistrict && selectedDistrict !== 'Tümü' 
+            ? `${selectedDistrict} Mekanları` 
+            : 'Öne Çıkan Mekanlar'
+          }
+        </Text>
+        
+        {filteredPlaces.map(place => (
+          <PlaceCard key={place.id} place={place} />
+        ))}
+        
+        {filteredPlaces.length === 0 && (
+          <Text style={styles.emptyText}>Mekan bulunamadı</Text>
+        )}
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: THEME_COLORS.background,
+  },
+  header: {
+    backgroundColor: THEME_COLORS.primary,
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: THEME_COLORS.surface,
+    letterSpacing: 2,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.8)',
+    marginTop: 4,
+  },
+  districtScroll: {
+    flexGrow: 0,
+  },
+  districtContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  districtButton: {
+    backgroundColor: THEME_COLORS.surface,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: THEME_COLORS.primary + '30',
+  },
+  districtButtonActive: {
+    backgroundColor: THEME_COLORS.primary,
+  },
+  districtButtonText: {
+    color: THEME_COLORS.textPrimary,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  districtButtonTextActive: {
+    color: THEME_COLORS.surface,
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: THEME_COLORS.textPrimary,
+    marginBottom: 16,
+  },
+  card: {
+    backgroundColor: THEME_COLORS.surface,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  placeName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: THEME_COLORS.textPrimary,
+    flex: 1,
+  },
+  ratingContainer: {
+    marginLeft: 12,
+  },
+  rating: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  location: {
+    fontSize: 14,
+    color: THEME_COLORS.textSecondary,
+    marginBottom: 12,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 12,
+  },
+  tag: {
+    fontSize: 12,
+    color: THEME_COLORS.primary,
+    backgroundColor: THEME_COLORS.primary + '15',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 8,
+    marginBottom: 4,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: THEME_COLORS.primary,
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: THEME_COLORS.textSecondary,
+    fontSize: 16,
+    marginTop: 40,
+  },
+});

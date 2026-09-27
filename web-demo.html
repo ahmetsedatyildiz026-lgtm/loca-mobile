@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOCA - İstanbul'u Keşfet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F8F9FA;
+            color: #1A1D20;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #D4A373, #E8B86D);
+            padding: 60px 20px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .district-filter {
+            display: flex;
+            gap: 10px;
+            padding: 16px 0;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        .district-btn {
+            background: white;
+            border: 2px solid rgba(212, 163, 115, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .district-btn.active {
+            background: #D4A373;
+            border-color: #D4A373;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1A1D20;
+        }
+
+        .place-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .place-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .place-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1A1D20;
+            flex: 1;
+        }
+
+        .rating {
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .location {
+            font-size: 14px;
+            color: #6C757D;
+            margin-bottom: 12px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            font-size: 12px;
+            color: #D4A373;
+            background: rgba(212, 163, 115, 0.15);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #D4A373;
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status.open {
+            background: #4CAF50;
+        }
+
+        .status.closed {
+            background: #F44336;
+        }
+
+        .featured-badge {
+            background: #D4A373;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+
+        .place-card {
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LOCA</h1>
+        <p>İstanbul'u Keşfet</p>
+    </div>
+
+    <div class="container">
+        <div class="district-filter" id="districtFilter">
+            <button class="district-btn active" onclick="filterDistrict('Tümü')">Tümü</button>
+            <button class="district-btn" onclick="filterDistrict('Beşiktaş')">Beşiktaş</button>
+            <button class="district-btn" onclick="filterDistrict('Kadıköy')">Kadıköy</button>
+            <button class="district-btn" onclick="filterDistrict('Beyoğlu')">Beyoğlu</button>
+            <button class="district-btn" onclick="filterDistrict('Fatih')">Fatih</button>
+            <button class="district-btn" onclick="filterDistrict('Sarıyer')">Sarıyer</button>
+        </div>
+
+        <h2 class="section-title" id="sectionTitle">Öne Çıkan Mekanlar</h2>
+
+        <div id="placesList">
+            <div class="place-card" data-district="Beşiktaş">
+                <div class="featured-badge">✨ VIP</div>
+                <div class="card-header">
+                    <h3 class="place-name">House Café Nişantaşı</h3>
+                    <span class="rating">⭐ 4.3</span>
+                </div>
+                <p class="location">📍 Beşiktaş, Nişantaşı</p>
+                <div class="tags">
+                    <span class="tag">💕 Romantik</span>
+                    <span class="tag">👨‍👩‍👧‍👦 Aile</span>
+                    <span class="tag">🍷 İçkili</span>
+                    <span class="tag">🌿 Teras</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">$$$</span>
+                    <span class="status open">Açık</span>
+                </div>
+            </div>
+
+            <div class="place-card" data-district="Kadıköy">
+                <div class="card-header">
+                    <h3 class="place-name">Karga Bar</h3>
+                    <span class="rating">⭐ 4.5</span>
+                </div>
+                <p class="location">📍 Kadıköy, Moda</p>
+                <div class="tags">
+                    <span class="tag">💕 Romantik</span>
+                    <span class="tag">🍷 İçkili</span>
+                    <span class="tag">🔊 Canlı</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">$$</span>
+                    <span class="status closed">Kapalı</span>
+                </div>
+            </div>
+
+            <div class="place-card" data-district="Beyoğlu">
+                <div class="featured-badge">✨ VIP</div>
+                <div class="card-header">
+                    <h3 class="place-name">Karaköy Lokantası</h3>
+                    <span class="rating">⭐ 4.6</span>
+                </div>
+                <p class="location">📍 Beyoğlu, Karaköy</p>
+                <div class="tags">
+                    <span class="tag">💕 Romantik</span>
+                    <span class="tag">👨‍👩‍👧‍👦 Aile</span>
+                    <span class="tag">🍷 İçkili</span>
+                    <span class="tag">🚗 Vale</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">$$$$</span>
+                    <span class="status open">Açık</span>
+                </div>
+            </div>
+
+            <div class="place-card" data-district="Fatih">
+                <div class="featured-badge">✨ VIP</div>
+                <div class="card-header">
+                    <h3 class="place-name">Pandeli Restaurant</h3>
+                    <span class="rating">⭐ 4.4</span>
+                </div>
+                <p class="location">📍 Fatih, Sultanahmet</p>
+                <div class="tags">
+                    <span class="tag">💕 Romantik</span>
+                    <span class="tag">👨‍👩‍👧‍👦 Aile</span>
+                    <span class="tag">☕ İçkisiz</span>
+                    <span class="tag">🔇 Sessiz</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">$$$</span>
+                    <span class="status open">Açık</span>
+                </div>
+            </div>
+
+            <div class="place-card" data-district="Sarıyer">
+                <div class="featured-badge">✨ VIP</div>
+                <div class="card-header">
+                    <h3 class="place-name">Bebek Hotel Restaurant</h3>
+                    <span class="rating">⭐ 4.7</span>
+                </div>
+                <p class="location">📍 Sarıyer, Bebek</p>
+                <div class="tags">
+                    <span class="tag">💕 Romantik</span>
+                    <span class="tag">👨‍👩‍👧‍👦 Aile</span>
+                    <span class="tag">🍷 İçkili</span>
+                    <span class="tag">🌿 Teras</span>
+                    <span class="tag">🚗 Vale</span>
+                </div>
+                <div class="card-footer">
+                    <span class="price">$$$$</span>
+                    <span class="status open">Açık</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterDistrict(district) {
+            // Update active button
+            document.querySelectorAll('.district-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update section title
+            const title = district === 'Tümü' ? 'Öne Çıkan Mekanlar' : `${district} Mekanları`;
+            document.getElementById('sectionTitle').textContent = title;
+
+            // Filter places
+            document.querySelectorAll('.place-card').forEach(card => {
+                const cardDistrict = card.dataset.district;
+                if (district === 'Tümü' || cardDistrict === district) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add click effects to cards
+        document.querySelectorAll('.place-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const placeName = card.querySelector('.place-name').textContent;
+                alert(`${placeName} detayları açılacak...`);
+            });
+        });
+    </script>
+</body>
+</html>
