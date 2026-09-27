@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LOCA - İstanbul Mekan Keşif Uygulaması
 
 **LOCA**, İstanbul'un 39 ilçesinden premium mekanları keşfetmenizi sağlayan hibrit mobil uygulama. Google Places API ile kendi özel veritabanımızı birleştiren gelişmiş mimari ile gerçek zamanlı mekan bilgileri ve özel atmosfer filtreleri sunar.
@@ -240,3 +241,7 @@ MIT License - Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 ---
 
 **LOCA ile İstanbul'u keşfedin! 🏙️✨**
+=======
+# loca-mobile
+LOCA - İstanbul Mekan Keşif Uygulaması
+>>>>>>> 97b85ebe3b63a7d4d86b7577be3b166b888abad7
